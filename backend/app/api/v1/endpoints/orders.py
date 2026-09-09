@@ -51,12 +51,11 @@ async def create_order(
         subtotal = unit_price * item.quantity
         total_amount += subtotal
 
-        # Lưu thông tin item chờ tạo
+        # Lưu thông tin item chờ tạo (không truyền total_price vì DB tự tính GENERATED ALWAYS)
         order_items_to_create.append({
             "product_id": product.id,
             "quantity": item.quantity,
             "unit_price": unit_price,
-            "total_price": subtotal
         })
 
     # Bước B: Tạo Order chính

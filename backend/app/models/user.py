@@ -23,7 +23,11 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     full_name: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
-    role: Mapped[UserRole] = mapped_column(SQLEnum(UserRole, name="user_role"), default=UserRole.CUSTOMER, server_default=UserRole.CUSTOMER.value)
+    role: Mapped[UserRole] = mapped_column(
+        SQLEnum(UserRole, name="user_role", values_callable=lambda x: [e.value for e in x]), 
+        default=UserRole.CUSTOMER, 
+        server_default=UserRole.CUSTOMER.value
+    )
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     last_login_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)

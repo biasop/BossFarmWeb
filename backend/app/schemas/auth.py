@@ -1,5 +1,6 @@
 from typing import Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, EmailStr,Field
+
 
 #DTO login
 class LoginRequest(BaseModel):
@@ -11,3 +12,9 @@ class Token(BaseModel):
     token_type: str = "bearer"
 class TokenPayload(BaseModel):
     sub: Optional[str] = None #để tạm mỗi id cho đơn giản
+
+class UserRegister(BaseModel):
+    username: str = Field(min_length=3, max_length=100, description="Tên đăng nhập")
+    email: EmailStr = Field(description="Email hợp lệ")
+    password: str = Field(min_length=8, description="Mật khẩu tối thiểu 8 ký tự")
+    full_name: Optional[str] = Field(default=None, max_length=255)

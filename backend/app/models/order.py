@@ -5,6 +5,7 @@ import enum
 from typing import Optional
 
 from sqlalchemy import String, Text, Numeric, Integer, DateTime, ForeignKey, Enum as SQLEnum, func, Uuid
+from sqlalchemy.schema import FetchedValue
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
@@ -43,12 +44,12 @@ class Order(Base):
     total_amount: Mapped[Decimal] = mapped_column(Numeric(15, 2), nullable=False)
     
     status: Mapped[OrderStatus] = mapped_column(
-        SQLEnum(OrderStatus, name="order_status"), 
+        SQLEnum(OrderStatus, name="order_status", values_callable=lambda x: [e.value for e in x]), 
         default=OrderStatus.PENDING, 
         server_default=OrderStatus.PENDING.value
     )
     payment_status: Mapped[PaymentStatus] = mapped_column(
-        SQLEnum(PaymentStatus, name="payment_status"), 
+        SQLEnum(PaymentStatus, name="payment_status", values_callable=lambda x: [e.value for e in x]), 
         default=PaymentStatus.UNPAID, 
         server_default=PaymentStatus.UNPAID.value
     )
@@ -74,6 +75,6 @@ class OrderItem(Base):
         ForeignKey("products.id", ondelete="RESTRICT"), 
         nullable=False
     )
-    quantity: Mapped[int] = mapped_column(Integer,nullable = False)
-    unit_price: Mapped[Decimal] = mapped_column(Numeric(15,2), nullable = False)
-    total_price: Mapped[Optional[Decimal]] = mapped_column(Numeric(15,2), nullable=True)
+    quantity: Mapped[int] = mapped_column(Integer, nullable=False)
+    unit_price: Mapped[Decimal] = mapped_column(Numeric(15, 2), nullable=False)
+    total_price: Mapped[Optional[Decimal]] = mapped_column(Numeric(15, 2), server_default=FetchedValue(), nullable=True)

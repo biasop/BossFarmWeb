@@ -10,12 +10,12 @@ from app.core.security import verify_password, create_access_token, get_password
 from app.api.deps import get_current_user
 from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse
-from app.schemas.auth import Token
+from app.schemas.auth import Token, UserRegister
 router = APIRouter()
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED, summary="Đăng ký tài khoản mới")
 async def register(
-    user_in: UserCreate,
+    user_in: UserRegister,
     db: AsyncSession = Depends(get_db)
 ) -> User:
     stmt = select(User).where(
