@@ -11,10 +11,10 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.core.database import Base
 
 class OrderStatus(str, enum.Enum):
-    PENDING = "pending"          # Chờ xác nhận
-    CONFIRMED = "confirmed"      # Đã xác nhận
+    PENDING = "pending"          # Chờ xử lý
+    PROCESSING = "processing"    # Đang xử lý
     SHIPPING = "shipping"        # Đang giao hàng
-    DELIVERED = "delivered"      # Đã giao thành công
+    COMPLETED = "completed"      # Đã hoàn thành
     CANCELLED = "cancelled"      # Đã hủy
 
 
