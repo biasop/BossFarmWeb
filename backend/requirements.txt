@@ -3,3 +3,5 @@ sqlalchemy>=2.0
 asyncpg
 pydantic-settings
 alembic
+bcrypt
+pyjwt

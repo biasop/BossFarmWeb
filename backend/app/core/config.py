@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
+    
+    SECRET_KEY: str = "tiemdeptraiquaemxinin4"
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 # 1 ngàys
 
     @computed_field 
     @property  #Cho phép truy cập như thuộc tính bình thường setting.DATABASE_URL
