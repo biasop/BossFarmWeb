@@ -1,10 +1,17 @@
 import axios from "axios";
 
 let rawBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://bossfarm-api.onrender.com/api/v1';
-rawBaseUrl = rawBaseUrl.trim().replace(/\/+$/, ''); // Bỏ dấu / ở cuối nếu có
-if (!rawBaseUrl.endsWith('/api/v1')) {
+
+// Chuẩn hóa tự động URL (xóa dấu gạch chéo dư, thêm /api/v1 nếu thiếu)
+rawBaseUrl = rawBaseUrl.trim().replace(/([^:])\/+/g, '$1/');
+rawBaseUrl = rawBaseUrl.replace(/\/+$/, '');
+if (rawBaseUrl.endsWith('/api')) {
+    rawBaseUrl = `${rawBaseUrl}/v1`;
+} else if (!rawBaseUrl.endsWith('/api/v1')) {
     rawBaseUrl = `${rawBaseUrl}/api/v1`;
 }
+rawBaseUrl = rawBaseUrl.replace(/([^:])\/+/g, '$1/');
+
 const BASE_URL = rawBaseUrl;
 
 export const apiClient = axios.create({
