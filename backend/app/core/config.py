@@ -35,8 +35,14 @@ class Settings(BaseSettings):
                 url = url.replace("postgres://", "postgresql+asyncpg://", 1)
             elif url.startswith("postgresql://"):
                 url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
-            # Xóa các param libpq như channel_binding của Neon để tương thích asyncpg
-            url = url.replace("&channel_binding=require", "").replace("channel_binding=require&", "").replace("?channel_binding=require", "")
+            
+            # asyncpg không chấp nhận tham số 'sslmode' hay 'channel_binding' của libpq
+            # Chuẩn hóa toàn bộ query string thành ?ssl=require
+            if "?" in url:
+                base_url, _ = url.split("?", 1)
+                url = f"{base_url}?ssl=require"
+            elif "neon.tech" in url or "supabase" in url:
+                url = f"{url}?ssl=require"
             return url
 
         # Ngược lại tạo từ các biến POSTGRES_*
