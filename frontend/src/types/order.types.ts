@@ -1,4 +1,4 @@
-import type { Product } from './product.types.ts';
+import type { Product } from './product.types';
 
 export type OrderStatus = 'pending' | 'processing' | 'shipping' | 'completed' | 'cancelled';
 export type PaymentStatus = 'unpaid' | 'paid' | 'refunded';
