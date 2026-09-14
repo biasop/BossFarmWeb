@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingCart, User as UserIcon, LogOut, Search, Sprout, Menu, Leaf, User } from 'lucide-react';
+import { ShoppingCart, User as UserIcon, LogOut, Search, Sprout, Menu } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
