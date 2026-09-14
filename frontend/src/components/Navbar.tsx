@@ -1,29 +1,43 @@
 import React from 'react';
-import { ShoppingCart, User as UserIcon, LogOut, Search, Sprout } from 'lucide-react';
+import { ShoppingCart, User as UserIcon, LogOut, Search, Sprout, Menu, Leaf, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
 interface NavbarProps {
+    onOpenSidebar: () => void;
     onOpenAuth?: () => void; // hàm mở trang đăng nhập
     onOpenCart?: () => void; // Hàm mở giỏ hàng
     searchTerm?: string;
     onSearchChange?: (val: string) => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenAuth, onOpenCart, searchTerm = '', onSearchChange }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenSidebar, onOpenAuth, onOpenCart, searchTerm = '', onSearchChange }) => {
     const { totalCount } = useCart();
     const { user, isAuthenticated, logout } = useAuth();
 
     return (
         <header className="header-wrapper">
-            <div className="container main-header">
-                {/* LOGO */}
-                <a href="/" className="brand-logo">
-                    <div className="brand-icon-box">
-                        <Sprout size={24} />
-                    </div>
-                    <span>Boss Farm</span>
-                </a>
+            <div className="main-header" style={{ width: '100%', maxWidth: '100%', padding: '12px 20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    {/* Nút Menu màu trắng, có viền bo góc nhẹ */}
+                    <button
+                        className="menu-toggle-btn"
+                        onClick={onOpenSidebar}
+                        title="Menu danh mục"
+                    >
+                        <Menu size={22} color="var(--text-main)" />
+                    </button>
+                    {/* LOGO BOSS FARM */}
+                    <a href="/" className="brand-logo" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div className="brand-icon-box">
+                            <Sprout size={24} color="var(--primary-600)" />
+                        </div>
+                        <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--primary-800)', letterSpacing: '-0.02em' }}>
+                            Boss Farm
+                        </span>
+                    </a>
+                </div>
+
                 {/* THANH TÌM KIẾM */}
                 <div className="search-box">
                     <Search size={18} className="search-icon" />

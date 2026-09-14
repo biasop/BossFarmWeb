@@ -5,6 +5,7 @@ import type { User, LoginCredentials, UserRegisterPayload } from '../types/auth.
 interface AuthContextType {
     user: User | null;
     isAuthenticated: boolean;
+    isEditor: boolean;
     isAdmin: boolean;
     isLoading: boolean;
     login: (credentials: LoginCredentials) => Promise<void>;
@@ -19,7 +20,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const isAuthenticated = user !== null;
-    const isAdmin = user?.role === 'admin';
+    const isEditor = user?.role === 'editor' || user?.role === 'admin'; const isAdmin = user?.role === 'admin';
 
     useEffect(() => {
         const checkLoggedInUser = async () => {
@@ -70,6 +71,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             value={{
                 user,
                 isAuthenticated,
+                isEditor,
                 isAdmin,
                 isLoading,
                 login,

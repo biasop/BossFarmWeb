@@ -52,3 +52,13 @@ async def get_current_active_admin(
             detail="Bạn không có quyền quản trị viên (ADMIN)!"
         )
     return current_user
+
+async def get_current_editor(
+    current_user: User = Depends(get_current_user)
+) -> User:
+    if current_user.role not in [UserRole.ADMIN, UserRole.EDITOR]:
+        raise HTTPException (
+            status_code = status.HTTP_403_FORBIDDEN,
+            detail="Bạn không có quyền EDITOR hoặc Quản trị viên"
+        )
+    return current_user

@@ -8,12 +8,15 @@ from app.core.utils import slugify
 from app.models.product import Product
 from app.models.category import ProductCategory
 from app.schemas.product import ProductCreate, ProductResponse, ProductUpdate
+from app.api.deps import get_current_editor
+from app.models.user import User
+
 
 
 router = APIRouter()
 
 @router.post("/", response_model = ProductResponse, status_code=status.HTTP_201_CREATED, summary = "Tạo sản phẩm mới")
-async def created_product(product_in: ProductCreate, db: AsyncSession = Depends(get_db)):
+async def created_product(product_in: ProductCreate, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_editor)): #thêm phân quyên để người thường không thể tạo được sản phẩm mới, chỉ có editor thôi
     slug = slugify(product_in.name)
     stmt = select(Product).where(Product.slug == slug)
     result = await db.execute(stmt)
@@ -22,7 +25,7 @@ async def created_product(product_in: ProductCreate, db: AsyncSession = Depends(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Đã có sản phẩm có slug là {slug} tồn tại")
 
     data = product_in.model_dump(exclude={"category_ids"})
-    new_product = Product(**data, slug = slug)
+    new_product = Product(**data, slug = slug, created_by = current_user.id)
 
     db.add(new_product)
     await db.flush() # sinh ra id và các trường time, flush xong thì database sinh ra tạm thời và nằm trong phiên làm việc tạm thời (Transaction)
@@ -83,7 +86,9 @@ async def get_product_by_id(id: uuid.UUID, db: AsyncSession = Depends(get_db)) -
 async def update_product(
     id: uuid.UUID,
     product_in: ProductUpdate,
-    db : AsyncSession = Depends(get_db)
+    db : AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_editor)
+
 ) -> Product:
     stmt = select(Product).where(Product.id == id)
     result = await db.execute(stmt)
@@ -107,7 +112,7 @@ async def update_product(
     return product
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT, summary="Xoá sản phẩm")
-async def delete_product(id: uuid.UUID, db: AsyncSession = Depends(get_db)):
+async def delete_product(id: uuid.UUID, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_editor)):
     stmt = select(Product).where(Product.id == id)
     result = await db.execute(stmt)
     product = result.scalar_one_or_none()

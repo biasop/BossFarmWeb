@@ -8,10 +8,14 @@ export const authService = {
     },
 
     login: async (params: LoginCredentials): Promise<TokenResponse> => {
-        const formData = new FormData();
+        const formData = new URLSearchParams();
         formData.append('username', params.username);
         formData.append('password', params.password);
-        const response = await apiClient.post<TokenResponse>('/auth/login', formData);
+        const response = await apiClient.post<TokenResponse>('/auth/login', formData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+        });
         return response.data;
     },
 

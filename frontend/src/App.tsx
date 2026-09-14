@@ -11,7 +11,7 @@ import { productService } from './services/product.service';
 import type { Product } from './types/product.types';
 import { Sparkles } from 'lucide-react';
 import { ProductDetailModal } from './components/ProductDetailModal';
-
+import { Sidebar } from './components/Sidebar';
 
 export function App() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -23,7 +23,7 @@ export function App() {
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   // 2. Tải sản phẩm từ Backend (có debounce khi gõ tìm kiếm)
   useEffect(() => {
     setLoading(true);
@@ -50,10 +50,17 @@ export function App() {
         <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
           {/* A. NAVBAR */}
           <Navbar
+            onOpenSidebar={() => setIsSidebarOpen(true)}
             onOpenAuth={() => setIsAuthOpen(true)}
             onOpenCart={() => setIsCartOpen(true)}
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
+          />
+
+          <Sidebar
+            isOpen={isSidebarOpen}
+            onClose={() => setIsSidebarOpen(false)}
+            onOpenAuth={() => setIsAuthOpen(true)}
           />
 
           {/* B. THÂN TRANG */}
